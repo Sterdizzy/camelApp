@@ -22,7 +22,7 @@ export default function SectorManager() {
 
   const loadSectors = async () => {
     setIsLoading(true);
-    const sectorData = await Sector.list("-created_date");
+    const sectorData = await Sector.list("-createdAt");
     setSectors(sectorData);
     setIsLoading(false);
   };

@@ -1,6 +1,25 @@
 import FirestoreService from './firestore.js';
 import { auth } from '../lib/firebase';
 
+// Helper function to wait for auth state to be loaded
+const waitForAuth = () => {
+  return new Promise((resolve, reject) => {
+    if (auth.currentUser) {
+      resolve(auth.currentUser);
+      return;
+    }
+    
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      unsubscribe();
+      if (user) {
+        resolve(user);
+      } else {
+        reject(new Error('User not authenticated'));
+      }
+    });
+  });
+};
+
 // Portfolio Service
 class PortfolioService extends FirestoreService {
   constructor() {
@@ -8,21 +27,19 @@ class PortfolioService extends FirestoreService {
   }
 
   async create(data) {
-    const user = auth.currentUser;
-    if (!user) throw new Error('User not authenticated');
+    const user = await waitForAuth();
     
     return super.create({
       ...data,
       userId: user.uid,
-      cashBalance: data.cashBalance || 0,
+      cash_balance: data.cash_balance || data.cashBalance || 0,
+      createdAt: new Date().toISOString(),
     });
   }
 
-  async list() {
-    const user = auth.currentUser;
-    if (!user) throw new Error('User not authenticated');
-    
-    return super.filter({ userId: user.uid });
+  async list(orderByField = '-createdAt') {
+    const user = await waitForAuth();
+    return super.filter({ userId: user.uid }, orderByField);
   }
 
   async getUserPortfolios() {
@@ -37,8 +54,7 @@ class TransactionService extends FirestoreService {
   }
 
   async create(data) {
-    const user = auth.currentUser;
-    if (!user) throw new Error('User not authenticated');
+    const user = await waitForAuth();
     
     return super.create({
       ...data,
@@ -48,15 +64,12 @@ class TransactionService extends FirestoreService {
   }
 
   async list(orderByField = '-transactionDate') {
-    const user = auth.currentUser;
-    if (!user) throw new Error('User not authenticated');
-    
+    const user = await waitForAuth();
     return super.filter({ userId: user.uid }, orderByField);
   }
 
   async filter(filters, orderByField = '-transactionDate') {
-    const user = auth.currentUser;
-    if (!user) throw new Error('User not authenticated');
+    const user = await waitForAuth();
     
     return super.filter({
       ...filters,
@@ -72,8 +85,7 @@ class SectorService extends FirestoreService {
   }
 
   async create(data) {
-    const user = auth.currentUser;
-    if (!user) throw new Error('User not authenticated');
+    const user = await waitForAuth();
     
     return super.create({
       ...data,
@@ -81,11 +93,9 @@ class SectorService extends FirestoreService {
     });
   }
 
-  async list() {
-    const user = auth.currentUser;
-    if (!user) throw new Error('User not authenticated');
-    
-    return super.filter({ userId: user.uid });
+  async list(orderByField = 'createdAt') {
+    const user = await waitForAuth();
+    return super.filter({ userId: user.uid }, orderByField);
   }
 }
 
@@ -96,8 +106,7 @@ class ImportHistoryService extends FirestoreService {
   }
 
   async create(data) {
-    const user = auth.currentUser;
-    if (!user) throw new Error('User not authenticated');
+    const user = await waitForAuth();
     
     return super.create({
       ...data,
@@ -105,11 +114,9 @@ class ImportHistoryService extends FirestoreService {
     });
   }
 
-  async list() {
-    const user = auth.currentUser;
-    if (!user) throw new Error('User not authenticated');
-    
-    return super.filter({ userId: user.uid });
+  async list(orderByField = 'createdAt') {
+    const user = await waitForAuth();
+    return super.filter({ userId: user.uid }, orderByField);
   }
 }
 

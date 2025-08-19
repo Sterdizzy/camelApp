@@ -32,7 +32,7 @@ export default function PortfolioManager() {
   const loadPortfolios = async () => {
     setIsLoading(true);
     try {
-      const portfolioData = await Portfolio.list("-created_date");
+      const portfolioData = await Portfolio.list("-createdAt");
       setPortfolios(portfolioData);
     } catch (error) {
       console.error("Failed to load portfolios:", error);
@@ -95,7 +95,10 @@ export default function PortfolioManager() {
       }
       
       setIsDialogOpen(false);
-      loadPortfolios();
+      setCurrentPortfolio(null);
+      setFormData({ name: "", type: "long_term", description: "", cash_balance: 0 });
+      // Add small delay to ensure Firestore has committed the data
+      setTimeout(() => loadPortfolios(), 500);
     } catch (error) {
       console.error("Failed to save portfolio:", error);
       alert("Failed to save portfolio. Please try again.");
@@ -155,7 +158,7 @@ export default function PortfolioManager() {
                         Cash Balance: {formatCurrency(portfolio.cash_balance)}
                       </p>
                       <p className="text-xs text-slate-400">
-                        Created: {new Date(portfolio.created_date).toLocaleDateString()}
+                        Created: {new Date(portfolio.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                   </div>

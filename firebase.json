@@ -1,9 +1,11 @@
 {
   "firestore": {
+    "database": "camelapp",
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
+    "site": "camelapp",
     "public": "dist",
     "ignore": [
       "firebase.json",

@@ -1,4 +1,5 @@
 import Layout from "./Layout.jsx";
+import Login from "./Login.jsx";
 
 import Dashboard from "./Dashboard";
 import Analytics from "./Analytics";
@@ -11,6 +12,8 @@ import TradeDetails from "./TradeDetails";
 import AssetDetails from "./AssetDetails";
 
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { Loader2 } from "lucide-react";
 
 const PAGES = {
     Dashboard: Dashboard,
@@ -41,6 +44,22 @@ function _getCurrentPage(url) {
 function PagesContent() {
     const location = useLocation();
     const currentPage = _getCurrentPage(location.pathname);
+    const { user, loading } = useAuth();
+    
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+                <div className="text-center">
+                    <Loader2 className="w-8 h-8 mx-auto animate-spin text-blue-600 mb-4" />
+                    <p className="text-slate-600">Loading...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return <Login />;
+    }
     
     return (
         <Layout currentPageName={currentPage}>
@@ -62,8 +81,10 @@ function PagesContent() {
 
 export default function Pages() {
     return (
-        <Router>
-            <PagesContent />
-        </Router>
+        <AuthProvider>
+            <Router>
+                <PagesContent />
+            </Router>
+        </AuthProvider>
     );
 }

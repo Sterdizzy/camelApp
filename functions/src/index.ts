@@ -7,6 +7,7 @@ import axios from "axios";
 
 // Initialize Firebase Admin SDK
 initializeApp();
+const db = getFirestore();
 
 const corsHandler = cors({origin: true});
 
