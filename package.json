@@ -1,5 +1,5 @@
 {
-  "name": "base44-app",
+  "name": "camelapp",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,7 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "firebase:login": "firebase login",
+    "firebase:init": "firebase init",
+    "firebase:deploy": "npm run build && firebase deploy",
+    "firebase:deploy:hosting": "npm run build && firebase deploy --only hosting",
+    "firebase:deploy:firestore": "firebase deploy --only firestore",
+    "firebase:emulators": "firebase emulators:start",
+    "firebase:serve": "npm run build && firebase serve"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.2",

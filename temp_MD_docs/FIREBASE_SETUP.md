@@ -8,7 +8,7 @@
 
 1. Go to [Firebase Console](https://console.firebase.google.com)
 2. Click "Create a project"
-3. Enter project name: `invest-savvy-production` (or your preferred name)
+3. Enter project name: `camelApp` (or your preferred name)
 4. Enable Google Analytics (optional but recommended)
 5. Select Google Analytics account or create new one
 
@@ -22,7 +22,7 @@
    - Save
 3. In **Settings** tab, add authorized domains:
    - `localhost` (for development)
-   - Your production domain (e.g., `invest-savvy.vercel.app`)
+   - Your production domain (e.g., `camelapp.vercel.app`)
 
 ## 3. Set up Firestore Database
 
@@ -47,7 +47,7 @@ firebase deploy --only firestore:indexes
 1. Go to **Project Settings** > **General**
 2. Scroll down to **Your apps**
 3. Click **Web app** icon (</>) 
-4. Enter app nickname: `InvestSavvy Web`
+4. Enter app nickname: `CamelApp Web`
 5. Don't check "Set up Firebase Hosting"
 6. Copy the configuration object
 
